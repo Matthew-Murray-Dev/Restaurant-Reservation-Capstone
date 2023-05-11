@@ -1,3 +1,6 @@
+const service = require("./tables.service");
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+
 /**
  * List handler for table resources
  */
