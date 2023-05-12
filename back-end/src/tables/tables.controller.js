@@ -94,6 +94,14 @@ return next();
     }
     next({status: 400, message: "Table is unavailable for seating"})
 }
+//Delete validation
+function hasNoOccupants(req, res, next) {
+    if (res.locals.table.reservation_id){
+return next();
+    }
+    next({status: 400, message: "Table is unoccupied"})
+}
+
 //crud functionality
 async function create(req, res) {
   const newTable = await service.create(req.body.data);
@@ -126,6 +134,13 @@ async function updateTable(req, res, next) {
   res.status(200).json({ data: output });
 }
 
+async function deleteTableSeating(req, res, next) {
+    service
+    .deleteTableSeating(res.locals.table.table_id)
+    .then(() => res.sendStatus(200))
+    .catch(next);
+  }
+
 module.exports = {
   create: [
     hasData,
@@ -145,4 +160,5 @@ module.exports = {
     asyncErrorBoundary(updateTable),
   ],
   listTableById: [asyncErrorBoundary(tableExistsById), listTableById],
+  deleteTableSeating:[asyncErrorBoundary(tableExistsById),hasNoOccupants,asyncErrorBoundary(deleteTableSeating)]
 };
