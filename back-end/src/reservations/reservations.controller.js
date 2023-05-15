@@ -149,9 +149,7 @@ function hasEligibleTimeframe(req, res, next) {
 //User story 6
 function setDefaultStatus(req,res,next){
   const status=req.body.data.status
-  if(!status||status===""){
-    req.body.data.status="booked"
-    }
+  
     if(status==="booked"){
       return next();
     }
