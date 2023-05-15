@@ -24,7 +24,7 @@ function listReservationByMobileNumber(mobile_number) {
 }
 
 function listReservationByDate(date){
-    return knex("reservation").select("*").where({ date }).sortBy('reservation_time','asc');
+    return knex("reservation").select("*").where({ date }).whereNot({status: "finished"}).orWhereNot({status:"cancelled"}).sortBy('reservation_time','asc');
 }
 
 function updateReservation(updatedReservation) {
@@ -33,6 +33,7 @@ function updateReservation(updatedReservation) {
     .where({ reservation_id: updatedReservation.reservation_id })
     .update(updatedReservation);
 }
+
 
 /*
 function deleteReservation(reservation_id) {

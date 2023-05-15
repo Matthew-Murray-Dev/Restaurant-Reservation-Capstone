@@ -94,6 +94,13 @@ return next();
     }
     next({status: 400, message: "Table is unavailable for seating"})
 }
+//userStory6
+function isNotSeated(req,res,next){
+if (!res.locals.reservation.status==="seated"){
+    return next();
+}
+next({status:400,message:"Reservation is already seated"})
+}
 //Delete validation
 function hasNoOccupants(req, res, next) {
     if (res.locals.table.reservation_id){
@@ -127,7 +134,12 @@ async function updateTable(req, res, next) {
     ...res.locals.table,
     ...req.body.data,
   };
-  await service.updateTable(updatedTable);
+  
+  const updatedReservation = {
+    ...res.locals.reservation,
+    status:"seated"
+  }
+  await service.updateTable(updatedTable,updatedReservation);
   const reReadData = await service.listTableById(res.locals.table.table_id);
   const output = await service.listTableById(reReadData.table_id);
 
@@ -154,9 +166,9 @@ module.exports = {
     asyncErrorBoundary(tableExistsById),
     hasData,
     hasReservationId,
-    reservationExistsById,
+    asyncErrorBoundary(reservationExistsById),
     hasEligibleCapacity,
-    hasAvailability,
+    hasAvailability,isNotSeated,
     asyncErrorBoundary(updateTable),
   ],
   listTableById: [asyncErrorBoundary(tableExistsById), listTableById],

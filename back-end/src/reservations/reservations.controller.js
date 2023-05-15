@@ -146,6 +146,35 @@ function hasEligibleTimeframe(req, res, next) {
     message: "Time must be in the future and during working hours",
   });
 }
+//User story 6
+function setDefaultStatus(req,res,next){
+  const status=req.body.data.status
+  if(!status||status===""){
+    req.body.data.status="booked"
+    }
+    if(status==="booked"){
+      return next();
+    }
+  next({status:400,message:'Cannot create reservation with "seated" or "finished" status'})
+}
+
+function statusFinished(req,res,next){
+  const status=res.locals.reservation.status
+  if (!status==="finished"){
+    return next();
+  }
+  next({status:400,message:"a finished reservation cannot be updated"})
+}
+
+function statusUnknown(req,res,next){
+  const status=req.body.data.status
+  const validStatus=["booked","seated","finished","cancelled"]
+  if (!status==="unknown"&&validStatus.includes(status)){
+    return next();
+  }
+  next({status:400,message:"Status to update cannot be unknown"})
+}
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~
 function listReservationById(req, res) {
@@ -191,6 +220,8 @@ async function updateReservation(req, res, next) {
   res.json({ data: output });
 }
 
+
+
 /*
 async function deleteReservation(req, res, next) {
   service
@@ -207,7 +238,7 @@ module.exports = {
     isATime,
     hasEligibleFutureDate,
     hasEligibleTimeframe,
-    hasEligibleNumberOfPeople,
+    hasEligibleNumberOfPeople,setDefaultStatus,
     asyncErrorBoundary(create),
   ],
   listReservationById: [
@@ -234,6 +265,8 @@ module.exports = {
     hasEligibleNumberOfPeople,
     asyncErrorBoundary(updateReservation),
   ],
+  updateStatus:[asyncErrorBoundary(reservationExistsById),
+    hasData,statusFinished,statusUnknown,asyncErrorBoundary(updateReservation)],
   /*deleteReservation: [
     asyncErrorBoundary(reservationExistsById),
     asyncErrorBoundary(deleteReservation),
