@@ -16,7 +16,7 @@ async function tableExistsById(req, res, next) {
   }
   return next({ status: 404, message: `Table ${table_id} cannot be found.` });
 }
-//Create validation
+//User Story 4 - Creating a table validation
 
 function hasData(req, res, next) {
   if (req.body.data) {
@@ -30,7 +30,11 @@ function hasAllRequiredFields(req, res, next) {
   let fieldCheck = false;
   fields.forEach((field) => {
     if (!req.body.data[field] || req.body.data[field] === "") {
-      if (!fieldCheck) {fieldCheck=field} else {fieldCheck=fieldCheck+", "+field}
+      if (!fieldCheck) {
+        fieldCheck = field;
+      } else {
+        fieldCheck = fieldCheck + ", " + field;
+      }
     }
   });
   if (!fieldCheck) {
@@ -52,7 +56,9 @@ function hasEligibleTableName(req, res, next) {
 
 function hasEligibleCapacity(req, res, next) {
   let capacity = req.body.data.capacity;
-  if (!capacity){capacity=res.locals.table.capacity}
+  if (!capacity) {
+    capacity = res.locals.table.capacity;
+  }
   if (typeof capacity === "number" && !(capacity < 1)) {
     return next();
   }
@@ -61,7 +67,7 @@ function hasEligibleCapacity(req, res, next) {
     message: `capacity must be a number greater than 0`,
   });
 }
-// Update with Reservation Validation
+// User Story 4 - Seating a table validation
 function hasReservationId(req, res, next) {
   if (req.body.data.reservation_id) {
     return next();
@@ -79,7 +85,10 @@ async function reservationExistsById(req, res, next) {
 
     return next();
   }
-  return next({ status: 404, message: `Reservation ${reservation_id} cannot be found.` });
+  return next({
+    status: 404,
+    message: `Reservation ${reservation_id} cannot be found.`,
+  });
 }
 
 function hasTableCapacity(req, res, next) {
@@ -90,27 +99,29 @@ function hasTableCapacity(req, res, next) {
 }
 
 function hasAvailability(req, res, next) {
-    if (!res.locals.table.reservation_id){
-return next();
-    }
-    next({status: 400, message: "table is occupied"})
-}
-//userStory6
-function isNotSeated(req,res,next){
-if (!(res.locals.reservation.status==="seated")){
+  if (!res.locals.table.reservation_id) {
     return next();
-}
-next({status:400,message:"Reservation is already seated"})
-}
-//Delete validation
-function hasNoOccupants(req, res, next) {
-    if (res.locals.table.reservation_id){
-return next();
-    }
-    next({status: 400, message: "Table is not occupied"})
+  }
+  next({ status: 400, message: "table is occupied" });
 }
 
-//crud functionality
+//User Story 5 - finish occupied table validation
+function hasNoOccupants(req, res, next) {
+  if (res.locals.table.reservation_id) {
+    return next();
+  }
+  next({ status: 400, message: "Table is not occupied" });
+}
+
+//User Story6 - attempting to seat an already seated reservation
+function isNotSeated(req, res, next) {
+  if (!(res.locals.reservation.status === "seated")) {
+    return next();
+  }
+  next({ status: 400, message: "Reservation is already seated" });
+}
+
+// Create, List, Update, Delete
 async function create(req, res) {
   const newTable = await service.create(req.body.data);
   res.status(201).json({
@@ -135,25 +146,27 @@ async function updateTable(req, res, next) {
     ...res.locals.table,
     ...req.body.data,
   };
-  
+
   const updatedReservation = {
     ...res.locals.reservation,
-    status:"seated"
-  }
-  //,updatedReservation
-  await service.updateTable(updatedTable,updatedReservation);
+    status: "seated",
+  };
+
+  await service.updateTable(updatedTable, updatedReservation);
   const reReadData = await service.listTableById(res.locals.table.table_id);
-  //const output = await service.listTableById(reReadData.table_id);
 
   res.status(200).json({ data: reReadData });
 }
 
 async function deleteTableSeating(req, res, next) {
-    service
-    .deleteTableSeating(res.locals.table.table_id,res.locals.table.reservation_id)
+  service
+    .deleteTableSeating(
+      res.locals.table.table_id,
+      res.locals.table.reservation_id
+    )
     .then(() => res.sendStatus(200))
     .catch(next);
-  }
+}
 
 module.exports = {
   create: [
@@ -169,10 +182,16 @@ module.exports = {
     hasData,
     hasReservationId,
     asyncErrorBoundary(reservationExistsById),
-    hasEligibleCapacity,hasTableCapacity,
-    hasAvailability,isNotSeated,
+    hasEligibleCapacity,
+    hasTableCapacity,
+    hasAvailability,
+    isNotSeated,
     asyncErrorBoundary(updateTable),
   ],
   listTableById: [asyncErrorBoundary(tableExistsById), listTableById],
-  deleteTableSeating:[asyncErrorBoundary(tableExistsById),hasNoOccupants,asyncErrorBoundary(deleteTableSeating)]
+  deleteTableSeating: [
+    asyncErrorBoundary(tableExistsById),
+    hasNoOccupants,
+    asyncErrorBoundary(deleteTableSeating),
+  ],
 };

@@ -6,7 +6,6 @@ const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 //~~~~~Validation Functions~~~~~~~~~~
 
-//For Update
 async function reservationExistsById(req, res, next) {
   const reservation_id = req.params.reservation_id;
   const reservation = await service.listReservationById(reservation_id);
@@ -15,9 +14,11 @@ async function reservationExistsById(req, res, next) {
 
     return next();
   }
-  return next({ status: 404, message: `Reservation ${reservation_id} cannot be found.` });
+  return next({
+    status: 404,
+    message: `Reservation ${reservation_id} cannot be found.`,
+  });
 }
-//These two can probably be combined
 
 async function reservationExistsByQuery(req, res, next) {
   const mobile_number = req.query.mobile_number;
@@ -39,18 +40,19 @@ async function reservationExistsByQuery(req, res, next) {
       return next();
     }
     return next({ status: 404, message: "No reservations found" });
-  }
-  else{const reservationByMobile_Number = await service.listReservationByMobileNumber(mobile_number)
-    res.locals.reservation=[]
-    if (reservationByMobile_Number && reservationByMobile_Number.length!==0){
+  } else {
+    const reservationByMobile_Number =
+      await service.listReservationByMobileNumber(mobile_number);
+    res.locals.reservation = [];
+    if (reservationByMobile_Number && reservationByMobile_Number.length !== 0) {
       res.locals.reservation = reservationByMobile_Number;
-      }
-  
-      return next();}
-  
+    }
+
+    return next();
+  }
 }
 
-//~~~~~Create validation~~~~~
+//User Story 1 - Create/Update validation
 function hasData(req, res, next) {
   if (req.body.data) {
     return next();
@@ -70,7 +72,11 @@ function hasAllRequiredFields(req, res, next) {
   let fieldCheck = false;
   fields.forEach((field) => {
     if (!req.body.data[field] || req.body.data[field] === "") {
-      if (!fieldCheck) {fieldCheck=field} else {fieldCheck=fieldCheck+", "+field}
+      if (!fieldCheck) {
+        fieldCheck = field;
+      } else {
+        fieldCheck = fieldCheck + ", " + field;
+      }
     }
   });
   if (!fieldCheck) {
@@ -103,8 +109,8 @@ function isATime(req, res, next) {
 
 function hasEligibleNumberOfPeople(req, res, next) {
   const people = req.body.data.people;
-  console.log(typeof people)
-  if ( typeof people==="number" && !(people < 1)) {
+  
+  if (typeof people === "number" && !(people < 1)) {
     return next();
   }
   next({
@@ -112,9 +118,8 @@ function hasEligibleNumberOfPeople(req, res, next) {
     message: "Number of people must be greater than 0 and a number",
   });
 }
-//User Story 2
+//User Story 2 - future date validation
 function hasEligibleFutureDate(req, res, next) {
-  
   const weekday = [
     "Sunday",
     "Monday",
@@ -124,21 +129,21 @@ function hasEligibleFutureDate(req, res, next) {
     "Friday",
     "Saturday",
   ];
-   
-  const reservationDate = req.body.data.reservation_date;
-//dayTest.toISOString().split('T')[0]
-  let dateToday = new Date()
 
-  let dayOfWeek=new Date(reservationDate)
-  
-  const offset = dayOfWeek.getTimezoneOffset()
-  dayOfWeek=new Date(dayOfWeek.getTime() + (offset*60*1000))
-  dateToday=new Date(dateToday.getTime() - (offset*60*1000)).toJSON().slice(0, 10);
-  
-  
+  const reservationDate = req.body.data.reservation_date;
+
+  let dayOfWeek = new Date(reservationDate);
+  let dateToday = new Date();
+
+  const offset = dayOfWeek.getTimezoneOffset();
+
+  dayOfWeek = new Date(dayOfWeek.getTime() + offset * 60 * 1000);
+  dateToday = new Date(dateToday.getTime() - offset * 60 * 1000)
+    .toJSON()
+    .slice(0, 10);
 
   const dayOfReservation = weekday[dayOfWeek.getDay()];
-  
+
   if (!(reservationDate < dateToday) && dayOfReservation !== "Tuesday") {
     return next();
   }
@@ -147,32 +152,33 @@ function hasEligibleFutureDate(req, res, next) {
     message: `reservation_date must be in the future and not on a Tuesday when the restaurant is closed`,
   });
 }
-//User Story 3
+//User Story 3 - future time validation
 function hasEligibleTimeframe(req, res, next) {
   const reservationTime = req.body.data.reservation_time;
   const reservationDate = req.body.data.reservation_date;
-  let date = new Date();
-  const offset = date.getTimezoneOffset()
-  const dateToday=new Date(date.getTime() - (offset*60*1000))
-//~~~~~~~~~~~~~~~~~~
+
+  let dateToday = new Date();
+  const offset = dateToday.getTimezoneOffset();
+  dateToday = new Date(dateToday.getTime() - offset * 60 * 1000);
 
   if (!(reservationTime < "10:30") && !(reservationTime > "21:30")) {
     if (reservationDate > dateToday.toJSON().slice(0, 10)) {
       return next();
     }
-    if (!(reservationTime < dateToday.toJSON().slice(11,19))) {
+    if (!(reservationTime < dateToday.toJSON().slice(11, 19))) {
       return next();
     }
   }
   next({
     status: 400,
-    message: `Time must be in the future and during working hours` });
+    message: `Time must be in the future and during working hours`,
+  });
 }
-//User story 6
+//User story 6 - status validation
 function checkStatus(req, res, next) {
   const status = req.body.data.status;
-const invalidStatus=["seated","finished","cancelled"]
-  if (!(invalidStatus.includes(status))) {
+  const invalidStatus = ["seated", "finished", "cancelled"];
+  if (!invalidStatus.includes(status)) {
     return next();
   }
   next({
@@ -198,20 +204,20 @@ function statusUnknown(req, res, next) {
   next({ status: 400, message: "Status to update cannot be unknown" });
 }
 
-//~~~~~~~~~~~~~~~~~~~~~~~
-function listReservation(req, res) {
-  const { reservation } = res.locals;
-  res.json({
-    data: reservation,
-  });
-}
-
+//Create,List,Update,Delete
 
 async function create(req, res) {
   const newReservation = await service.create(req.body.data);
 
   res.status(201).json({
     data: newReservation[0],
+  });
+}
+
+function listReservation(req, res) {
+  const { reservation } = res.locals;
+  res.json({
+    data: reservation,
   });
 }
 
@@ -224,8 +230,6 @@ async function updateReservation(req, res, next) {
   const reReadData = await service.listReservationById(
     res.locals.reservation.reservation_id
   );
-  
-
   res.json({ data: reReadData[0] });
 }
 
@@ -233,7 +237,7 @@ async function updateReservation(req, res, next) {
 async function deleteReservation(req, res, next) {
   service
     .deleteReservation(res.locals.reservation.reservation_id)
-    .then(() => res.sendStatus(204))
+    .then(() => res.sendStatus(200))
     .catch(next);
 }
 */
@@ -258,7 +262,7 @@ module.exports = {
     asyncErrorBoundary(reservationExistsByQuery),
     listReservation,
   ],
-  
+
   updateReservation: [
     asyncErrorBoundary(reservationExistsById),
     hasData,
