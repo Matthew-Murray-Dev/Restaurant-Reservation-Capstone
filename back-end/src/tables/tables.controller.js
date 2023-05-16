@@ -7,14 +7,14 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
  */
 
 async function tableExistsById(req, res, next) {
-  const table_id = req.params;
+  const table_id = req.params.table_id;
   const table = await service.listTableById(table_id);
   if (table && table.length !== 0) {
     res.locals.table = table[0];
 
     return next();
   }
-  return next({ status: 404, message: "Table cannot be found." });
+  return next({ status: 404, message: `Table ${table_id} cannot be found.` });
 }
 //Create validation
 
@@ -27,37 +27,38 @@ function hasData(req, res, next) {
 
 function hasAllRequiredFields(req, res, next) {
   const fields = ["table_name", "capacity"];
-  let fieldCheck = true;
+  let fieldCheck = false;
   fields.forEach((field) => {
     if (!req.body.data[field] || req.body.data[field] === "") {
-      fieldCheck = false;
+      if (!fieldCheck) {fieldCheck=field} else {fieldCheck=fieldCheck+", "+field}
     }
   });
-  if (fieldCheck) {
+  if (!fieldCheck) {
     return next();
   }
-  next({ status: 400, message: "All fields must be filled out" });
+  next({ status: 400, message: `Please fill out ${fieldCheck} field(s)` });
 }
 
 function hasEligibleTableName(req, res, next) {
   const tableName = req.body.data.table_name;
-  if (!tableName.length < 2) {
+  if (!(tableName.length < 2)) {
     return next();
   }
   next({
     status: 400,
-    message: "Table_name must be a minimum of two characters",
+    message: "table_name must be a minimum of two characters",
   });
 }
 
 function hasEligibleCapacity(req, res, next) {
-  const capacity = req.body.data.capacity;
-  if (!capacity < 1 && typeof capacity === "number") {
+  let capacity = req.body.data.capacity;
+  if (!capacity){capacity=res.locals.table.capacity}
+  if (typeof capacity === "number" && !(capacity < 1)) {
     return next();
   }
   next({
     status: 400,
-    message: "Capacity must be a number greater than 0",
+    message: `capacity must be a number greater than 0`,
   });
 }
 // Update with Reservation Validation
@@ -78,11 +79,11 @@ async function reservationExistsById(req, res, next) {
 
     return next();
   }
-  return next({ status: 404, message: "Reservation cannot be found." });
+  return next({ status: 404, message: `Reservation ${reservation_id} cannot be found.` });
 }
 
-function hasEligibleCapacity(req, res, next) {
-  if (!res.locals.reservation.people > res.locals.table.capacity) {
+function hasTableCapacity(req, res, next) {
+  if (!(res.locals.reservation.people > res.locals.table.capacity)) {
     return next();
   }
   next({ status: 400, message: "Table capacity insufficient for seating" });
@@ -92,11 +93,11 @@ function hasAvailability(req, res, next) {
     if (!res.locals.table.reservation_id){
 return next();
     }
-    next({status: 400, message: "Table is unavailable for seating"})
+    next({status: 400, message: "table is occupied"})
 }
 //userStory6
 function isNotSeated(req,res,next){
-if (!res.locals.reservation.status==="seated"){
+if (!(res.locals.reservation.status==="seated")){
     return next();
 }
 next({status:400,message:"Reservation is already seated"})
@@ -106,14 +107,14 @@ function hasNoOccupants(req, res, next) {
     if (res.locals.table.reservation_id){
 return next();
     }
-    next({status: 400, message: "Table is unoccupied"})
+    next({status: 400, message: "Table is not occupied"})
 }
 
 //crud functionality
 async function create(req, res) {
   const newTable = await service.create(req.body.data);
   res.status(201).json({
-    data: newTable,
+    data: newTable[0],
   });
 }
 
@@ -139,16 +140,17 @@ async function updateTable(req, res, next) {
     ...res.locals.reservation,
     status:"seated"
   }
+  //,updatedReservation
   await service.updateTable(updatedTable,updatedReservation);
   const reReadData = await service.listTableById(res.locals.table.table_id);
-  const output = await service.listTableById(reReadData.table_id);
+  //const output = await service.listTableById(reReadData.table_id);
 
-  res.status(200).json({ data: output });
+  res.status(200).json({ data: reReadData });
 }
 
 async function deleteTableSeating(req, res, next) {
     service
-    .deleteTableSeating(res.locals.table.table_id)
+    .deleteTableSeating(res.locals.table.table_id,res.locals.table.reservation_id)
     .then(() => res.sendStatus(200))
     .catch(next);
   }
@@ -167,7 +169,7 @@ module.exports = {
     hasData,
     hasReservationId,
     asyncErrorBoundary(reservationExistsById),
-    hasEligibleCapacity,
+    hasEligibleCapacity,hasTableCapacity,
     hasAvailability,isNotSeated,
     asyncErrorBoundary(updateTable),
   ],

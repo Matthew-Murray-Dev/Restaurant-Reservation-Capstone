@@ -11,7 +11,7 @@ function list() {
 */
 
 function listReservationById(reservation_id) {
-  return knex("reservation").select("*").where({ reservation_id });
+  return knex("reservations").select("*").where({ reservation_id });
 }
 
 function listReservationByMobileNumber(mobile_number) {
@@ -24,11 +24,13 @@ function listReservationByMobileNumber(mobile_number) {
 }
 
 function listReservationByDate(date){
-    return knex("reservation").select("*").where({ date }).whereNot({status: "finished"}).orWhereNot({status:"cancelled"}).sortBy('reservation_time','asc');
+    return knex("reservations").select("*").where({ reservation_date:date }).whereNot({status: "finished"}).andWhereNot({status:"cancelled"}).orderBy('reservation_time','asc');
+    
+    
 }
 
 function updateReservation(updatedReservation) {
-  return knex("reservation")
+  return knex("reservations")
     .select("*")
     .where({ reservation_id: updatedReservation.reservation_id })
     .update(updatedReservation);
@@ -37,7 +39,7 @@ function updateReservation(updatedReservation) {
 
 /*
 function deleteReservation(reservation_id) {
-    return knex("reservation").where({ reservation_id }).del();
+    return knex("reservations").where({ reservation_id }).del();
   }
   */
 
