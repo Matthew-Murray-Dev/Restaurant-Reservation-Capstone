@@ -23,8 +23,7 @@ import useQuery from "../utils/useQuery";
 function Routes() {
   const query = useQuery();
 let date = query.get("date")
-  console.log(query.get("date"))
-if (!date){date=today()}
+  if (!date){date=today()}
   return (
     <Switch>
       <Route exact={true} path="/">

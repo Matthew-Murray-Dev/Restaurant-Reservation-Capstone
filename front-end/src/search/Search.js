@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
+import ReservationsList from "../listItems/ReservationsList";
 
 function Search() {
   const [error, setError] = useState(null);
@@ -48,7 +49,7 @@ function Search() {
       </div>
       <br />
       <ErrorAlert error={reservationsError} />
-
+<div><ReservationsList reservations={reservations}/></div>
       
 {JSON.stringify(reservations)}
 
