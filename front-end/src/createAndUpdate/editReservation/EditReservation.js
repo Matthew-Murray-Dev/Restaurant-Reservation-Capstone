@@ -1,23 +1,36 @@
 import React, { useEffect, useState } from "react";
 import ReservationForm from "../ReservationForm";
-import ErrorAlert from "../../layout/ErrorAlert";
 import { updateReservation } from "../../utils/api";
+import ErrorAlert from "../../layout/ErrorAlert";
+import {listReservationById} from "../../utils/api"
+import {useParams} from "react-router-dom"
 
+function EditReservation() {
+ 
+  const [reservation, setReservation] = useState([]);
+  const [reservationError, setReservationError] = useState(null);
 
-function EditReservation(reservation) {
-    initialFormState = {
-        first_name: reservation.first_name,
-        last_name: reservation.last_name,
-        mobile_number: reservation.mobile_number,
-        reservation_date: reservation.reservation_date,
-        reservation_time: reservation.reservation_time,
-        people: reservation.people,
-      };
+const {reservation_id} = useParams
+
+  useEffect(loadReservation, []);
+  function loadReservation() {
+    const abortController = new AbortController();
+    setReservationError(null);
+    listReservationById({reservation_id}, abortController.signal)
+      .then(setReservation)
+      .catch(setReservationError);
+    return () => abortController.abort();
+  }
+
+  return (<div>
+    <ErrorAlert error={reservationError} />
+    {!reservationError && <ReservationForm
+      api={updateReservation}
+      initialForm={reservation}
+      reservation={!reservationError&&true}
       
-      
-
-      return <ReservationForm api={updateReservation} initialForm={initialFormState} reservation={reservation}/>
+    />}</div>
+  );
 }
 
-
-export default EditReservation
+export default EditReservation;

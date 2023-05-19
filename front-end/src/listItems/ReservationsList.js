@@ -3,7 +3,7 @@ import ReservationListItem from "./ReservationListItem"
 
 function ReservationsList({reservations}){
     
-       return (<div>{reservations.map((reservation)=>(<ReservationListItem reservation={reservation} key={reservation.reservation_id}/>))}</div>)
+       return (<tbody>{reservations.map((reservation)=>(<ReservationListItem reservation={reservation} key={reservation.reservation_id}/>))}</tbody>)
 
 }
     

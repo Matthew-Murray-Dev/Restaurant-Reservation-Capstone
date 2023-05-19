@@ -1,4 +1,4 @@
-import React, { useState, } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 
@@ -6,7 +6,6 @@ function ReservationForm({ api, initialForm, reservation = [] }) {
   const [formData, setFormData] = useState({ ...initialForm });
   const [error, setError] = useState(null);
   const history = useHistory();
-  
 
   const handleChange = ({ target }) => {
     setFormData({
@@ -17,6 +16,7 @@ function ReservationForm({ api, initialForm, reservation = [] }) {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
+    formData.people = parseInt(formData.people);
     api(formData)
       .then(
         reservation.length
@@ -42,7 +42,7 @@ function ReservationForm({ api, initialForm, reservation = [] }) {
             type="text"
             id="first_name"
             name="first_name"
-            placeholder="Enter First Name"
+            placeholder="Enter first name"
             style={{ width: "100%" }}
             required={true}
             onChange={handleChange}
@@ -73,7 +73,7 @@ function ReservationForm({ api, initialForm, reservation = [] }) {
             id="mobile_number"
             name="mobile_number"
             pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-            placeholder="Enter mobile number"
+            placeholder="###-###-####"
             style={{ width: "100%" }}
             required={true}
             onChange={handleChange}
@@ -88,7 +88,7 @@ function ReservationForm({ api, initialForm, reservation = [] }) {
             type="date"
             id="reservation_date"
             name="reservation_date"
-            placeholder="During working days and not in the past"
+            placeholder="Enter reservation date"
             style={{ width: "100%" }}
             required={true}
             onChange={handleChange}
@@ -103,7 +103,7 @@ function ReservationForm({ api, initialForm, reservation = [] }) {
             type="time"
             id="reservation_time"
             name="reservation_time"
-            placeholder="During working hours and not <1hr before closing or in the past"
+            placeholder="Enter reservation time"
             style={{ width: "100%" }}
             required={true}
             onChange={handleChange}
@@ -119,7 +119,7 @@ function ReservationForm({ api, initialForm, reservation = [] }) {
             min="1"
             id="people"
             name="people"
-            placeholder="Number of people in party, minimum of 1"
+            placeholder="Enter number of people, minimum 1"
             style={{ width: "100%" }}
             required={true}
             onChange={handleChange}
@@ -130,7 +130,7 @@ function ReservationForm({ api, initialForm, reservation = [] }) {
         <div className="row p-3 ">
           <button onClick={() => history.go(-1)}>Cancel</button>
           <div className="col col-2">
-            <button onSubmit={handleFormSubmit}>Submit</button>
+            <button type="submit">Submit</button>
           </div>
         </div>
       </form>
