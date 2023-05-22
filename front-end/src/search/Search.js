@@ -4,10 +4,10 @@ import ErrorAlert from "../layout/ErrorAlert";
 import ReservationsList from "../listItems/ReservationsList";
 
 function Search() {
-  const [error, setError] = useState(null);
+ 
   const initialFormState = { mobile_number: "" };
   const [formData, setFormData] = useState(initialFormState);
-  const [searchStatus, setSearchStatus] = useState(false);
+  
 
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);

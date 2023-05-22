@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory} from "react-router-dom";
 import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationsList from "../listItems/ReservationsList";
@@ -12,14 +12,14 @@ import TablesList from "../listItems/TablesList";
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function Dashboard({ date }) {
+function Dashboard({ date,reload,setReload }) {
   
   const [reservations, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [tablesError, setTablesError] = useState(null);
   const history = useHistory();
-
+console.log(reload)
   useEffect(loadDashboard, [date]);
   useEffect(loadTables, []);
 
@@ -50,18 +50,19 @@ function Dashboard({ date }) {
       <div className="row" style={{ maxWidth: "400px" }}>
         <div className="col">
           <button
-            onClick={() => history.push(`/dashboard?date=${previous(date)}`)}
+            onClick={() =>{setReload(!reload); history.push(`/dashboard?date=${previous(date)}`)}
+              }
           >
             Previous <br /> {previous(date)}
           </button>
         </div>
         <div className="col">
-          <button onClick={() => history.push(`/dashboard?date=${today()}`)}>
+          <button onClick={() => {setReload(!reload);history.push(`/dashboard?date=${today()}`)}}>
             Today <br /> {today()}
           </button>
         </div>
         <div className="col">
-          <button onClick={() => history.push(`/dashboard?date=${next(date)}`)}>
+          <button onClick={() => {setReload(!reload);history.push(`/dashboard?date=${next(date)}`)}}>
             Next <br /> {next(date)}
           </button>
         </div>
@@ -86,7 +87,7 @@ function Dashboard({ date }) {
             </tr>
           </thead>
           {!reservationsError && (
-            <ReservationsList reservations={reservations} />
+            <ReservationsList reservations={reservations} reload = {reload}setReload={setReload} />
           )}
         </table>
       </div>

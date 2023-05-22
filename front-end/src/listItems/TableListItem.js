@@ -9,7 +9,7 @@ function TableListItem({ table }) {
       <td data-table-id-status={table.table_id}>
         {table.reservation_id ? "Occupied" : "Free"}
       </td>
-      <td>{table.reseration_id&&<button data-table-id-finish={table.table_id}>Finish</button>}</td>
+      <td>{table.reservation_id&&<button data-table-id-finish={table.table_id}>Finish</button>}</td>
     </tr>
   );
 }

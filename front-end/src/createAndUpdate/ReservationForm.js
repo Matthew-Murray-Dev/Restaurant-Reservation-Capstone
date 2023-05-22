@@ -2,12 +2,18 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 
-function ReservationForm({ api, initialForm, reservation = false }) {
+function ReservationForm({
+  api,
+  initialForm,
+  reservation = false,
+  reload,
+  setReloading,
+}) {
   const [formData, setFormData] = useState({ ...initialForm });
   const [error, setError] = useState(null);
   const history = useHistory();
 
-console.log(initialForm)
+  console.log(initialForm);
 
   const handleChange = ({ target }) => {
     setFormData({
@@ -15,13 +21,14 @@ console.log(initialForm)
       [target.name]: target.value,
     });
   };
-console.log(formData)
+  console.log(reload)
+  console.log(formData);
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    
+    setReloading(!reload);
     formData.people = parseInt(formData.people);
-    const abortController = new AbortController()
-    api(formData,abortController.signal,formData.reservation_id)
+    const abortController = new AbortController();
+    api(formData, abortController.signal, formData.reservation_id)
       .then(
         reservation
           ? history.go(-1)
@@ -132,7 +139,9 @@ console.log(formData)
         </div>
 
         <div className="row p-3 ">
-          <button onClick={() => history.go(-1)}>Cancel</button>
+          <button type="button" onClick={() => history.go(-1)}>
+            Cancel
+          </button>
           <div className="col col-2">
             <button type="submit">Submit</button>
           </div>

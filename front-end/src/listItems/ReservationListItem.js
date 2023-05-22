@@ -2,7 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { updateReservation } from "../utils/api";
 
-function ReservationListItem({ reservation }) {
+function ReservationListItem({ reservation,reload,setReload }) {
   const {
     reservation_id,
     first_name,
@@ -47,7 +47,7 @@ function ReservationListItem({ reservation }) {
       </td>
       <td>
         <button
-          onClick={() => history.push(`/reservations/${reservation_id}/edit`)}
+          onClick={() => {setReload(!reload);history.push(`/reservations/${reservation_id}/edit`)}}
         >
           Edit
         </button>

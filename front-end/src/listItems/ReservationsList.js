@@ -1,9 +1,9 @@
 import React from "react";
 import ReservationListItem from "./ReservationListItem"
 
-function ReservationsList({reservations}){
+function ReservationsList({reservations,reload,setReload}){
     console.log(reservations)
-       return (<tbody>{reservations.map((reservation)=>(<ReservationListItem reservation={reservation} key={reservation.reservation_id}/>))}</tbody>)
+       return (<tbody>{reservations.map((reservation)=>(<ReservationListItem reservation={reservation} reload={reload} setReload={setReload} key={reservation.reservation_id}/>))}</tbody>)
 
 }
     

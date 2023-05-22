@@ -5,14 +5,14 @@ import ErrorAlert from "../../layout/ErrorAlert";
 import {listReservationById} from "../../utils/api"
 import {useParams} from "react-router-dom"
 
-function EditReservation() {
+function EditReservation({reload,setReload}) {
  
   const [reservation, setReservation] = useState(null);
   const [reservationError, setReservationError] = useState(null);
 
 const {reservation_id} = useParams();
 
-  useEffect(loadReservation, []);
+  useEffect(loadReservation, [reservation_id]);
   function loadReservation() {
     const abortController = new AbortController();
     setReservationError(null);
@@ -28,7 +28,8 @@ console.log(reservation)
       api={updateReservation}
       initialForm={reservation}
       reservation={!reservationError&&true}
-      
+      reload={reload}
+      setReloading={setReload}
     />}</div>
   );
 }
