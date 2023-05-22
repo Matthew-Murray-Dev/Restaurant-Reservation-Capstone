@@ -42,7 +42,7 @@ async function deleteTableSeating(table_id, reservation_id) {
     const updatedTable = await trx("tables")
       .select("reservation_id")
       .where({ table_id })
-      .del();
+      .update({"reservation_id":null});
     await trx("reservations")
       .where({ reservation_id })
       .update({ status: "finished" });

@@ -5,7 +5,7 @@ import ErrorAlert from "../../layout/ErrorAlert";
 import {listReservationById} from "../../utils/api"
 import {useParams} from "react-router-dom"
 
-function EditReservation({reload,setReload}) {
+function EditReservation() {
  
   const [reservation, setReservation] = useState(null);
   const [reservationError, setReservationError] = useState(null);
@@ -28,8 +28,7 @@ console.log(reservation)
       api={updateReservation}
       initialForm={reservation}
       reservation={!reservationError&&true}
-      reload={reload}
-      setReloading={setReload}
+      
     />}</div>
   );
 }

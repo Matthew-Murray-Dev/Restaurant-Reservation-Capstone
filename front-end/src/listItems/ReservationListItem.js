@@ -2,7 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { updateReservation } from "../utils/api";
 
-function ReservationListItem({ reservation,reload,setReload }) {
+function ReservationListItem({ reservation }) {
   const {
     reservation_id,
     first_name,
@@ -19,17 +19,24 @@ function ReservationListItem({ reservation,reload,setReload }) {
   };
   const history = useHistory();
 
-    const reDirect = () => {
-   
-    const abortController = new AbortController()
-    updateReservation({"status":"cancelled"},abortController.signal,reservation_id,"/status");
-    history.go(0);
+  const reDirect = () => {
+    const abortController = new AbortController();
+    updateReservation(
+      { status: "cancelled" },
+      abortController.signal,
+      reservation_id,
+      "/status"
+    ).then(history.go(0));
   };
   const windowConfirm = () => {
-    
-    if(window.confirm(
-      "Do you want to cancel this reservation?\n\nThis cannot be undone."
-    )){reDirect();}}
+    if (
+      window.confirm(
+        "Do you want to cancel this reservation?\n\nThis cannot be undone."
+      )
+    ) {
+      reDirect();
+    }
+  };
   return (
     <tr key={reservation_id}>
       <td>{reservation_id}</td>
@@ -47,17 +54,15 @@ function ReservationListItem({ reservation,reload,setReload }) {
       </td>
       <td>
         <button
-          onClick={() => {setReload(!reload);history.push(`/reservations/${reservation_id}/edit`)}}
+          onClick={() => {
+            history.push(`/reservations/${reservation_id}/edit`);
+          }}
         >
           Edit
         </button>
       </td>
       <td>
-        <button
-          onClick={handleUpdate}
-        >
-          Cancel
-        </button>
+        <button onClick={handleUpdate}>Cancel</button>
       </td>
     </tr>
   );

@@ -16,7 +16,7 @@ function SeatTableList({ tables, reservation }) {
       {reservation_id:reservation.reservation_id},
       abortController.signal,
       thisTable
-    ).then(history.push(`/dashboard`));
+    ).then(()=>history.push(`/dashboard`));
   };
 console.log(reservation)
 console.log(reservation.reservation_id)

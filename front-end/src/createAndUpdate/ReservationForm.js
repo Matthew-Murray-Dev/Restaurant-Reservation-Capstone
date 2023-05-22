@@ -2,13 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 
-function ReservationForm({
-  api,
-  initialForm,
-  reservation = false,
-  reload,
-  setReloading,
-}) {
+function ReservationForm({ api, initialForm, reservation = false }) {
   const [formData, setFormData] = useState({ ...initialForm });
   const [error, setError] = useState(null);
   const history = useHistory();
@@ -21,16 +15,18 @@ function ReservationForm({
       [target.name]: target.value,
     });
   };
-  console.log(reload)
+
   console.log(formData);
+
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    setReloading(!reload);
+
     formData.people = parseInt(formData.people);
     const abortController = new AbortController();
+    console.log(api(formData, abortController.signal, formData.reservation_id))
     api(formData, abortController.signal, formData.reservation_id)
       .then(
-        reservation
+        ()=>reservation
           ? history.go(-1)
           : history.push(`/dashboard?date=${formData.reservation_date}`)
       )

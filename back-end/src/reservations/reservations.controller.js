@@ -9,6 +9,7 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 async function reservationExistsById(req, res, next) {
   const reservation_id = req.params.reservation_id;
   const reservation = await service.listReservationById(reservation_id);
+  console.log(reservation, "*");
   if (reservation && reservation.length !== 0) {
     res.locals.reservation = reservation[0];
 
@@ -61,8 +62,6 @@ function hasData(req, res, next) {
 }
 
 function hasAllRequiredFields(req, res, next) {
-
-  
   const fields = [
     "first_name",
     "last_name",
@@ -111,7 +110,7 @@ function isATime(req, res, next) {
 
 function hasEligibleNumberOfPeople(req, res, next) {
   const people = req.body.data.people;
-  
+
   if (typeof people === "number" && !(people < 1)) {
     return next();
   }
@@ -208,18 +207,20 @@ function statusUnknown(req, res, next) {
 
 //format Date
 
-function formatDate(req,res,next){
-  if (res.locals.reservation.length){res.locals.reservation.forEach((reservation)=>{reservation.reservation_date=reservation.reservation_date.toISOString().slice(0, 10)})} else if (!Array.isArray(res.locals.reservation)) {res.locals.reservation.reservation_date=res.locals.reservation.reservation_date.toISOString().slice(0,10)}
-  
-   
-
-  
-  
-  
-  return next();
+function formatDate(req, res, next) {
+  if (res.locals.reservation.length) {
+    res.locals.reservation.forEach((reservation) => {
+      reservation.reservation_date = reservation.reservation_date
+        .toISOString()
+        .slice(0, 10);
+    });
+  } else if (!Array.isArray(res.locals.reservation)) {
+    res.locals.reservation.reservation_date =
+      res.locals.reservation.reservation_date.toISOString().slice(0, 10);
   }
 
-
+  return next();
+}
 
 //Create,List,Update,Delete
 
@@ -244,9 +245,11 @@ async function updateReservation(req, res, next) {
     ...req.body.data,
   };
   await service.updateReservation(updatedReservation);
+
   const reReadData = await service.listReservationById(
     res.locals.reservation.reservation_id
   );
+  
   res.json({ data: reReadData[0] });
 }
 
@@ -293,7 +296,7 @@ module.exports = {
     hasEligibleNumberOfPeople,
     asyncErrorBoundary(updateReservation),
   ],
-   updateStatus: [
+  updateStatus: [
     asyncErrorBoundary(reservationExistsById),
     hasData,
     statusFinished,
@@ -305,7 +308,3 @@ module.exports = {
     asyncErrorBoundary(deleteReservation),
   ],*/
 };
-
-
-
-

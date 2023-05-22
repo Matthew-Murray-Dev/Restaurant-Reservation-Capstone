@@ -1,5 +1,4 @@
-import React, {useState} from "react";
-
+import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import Search from "../search/Search";
@@ -20,7 +19,7 @@ import EditReservation from "../createAndUpdate/editReservation/EditReservation"
  */
 
 function Routes() {
-  const [reload,setReload]=useState(false)
+  
   const query = useQuery();
   let date = query.get("date");
   if (!date) {
@@ -35,7 +34,7 @@ function Routes() {
         <Redirect to={"/dashboard"} />
       </Route>
       <Route path="/dashboard">
-        <Dashboard reload={reload} setReload={setReload} date={date} />
+        <Dashboard date={date} />
       </Route>
       <Route exact={true} path="/search">
         <Search />
@@ -44,10 +43,10 @@ function Routes() {
         <NewReservation />
       </Route>
       <Route path="/reservations/:reservation_id/edit">
-        <EditReservation reload={reload} setReload={setReload}/>
+        <EditReservation />
       </Route>
       <Route path="/reservations/:reservation_id/seat">
-        <SeatForm reload={reload} setReload={setReload}/>
+        <SeatForm />
       </Route>
 
       <Route exact={true} path="/tables/new">

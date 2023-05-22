@@ -6,20 +6,24 @@ import ReservationsList from "../listItems/ReservationsList";
 import { previous, next, today } from "../utils/date-time";
 import TablesList from "../listItems/TablesList";
 
+
+
 /**
  * Defines the dashboard page.
  * @param date
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function Dashboard({ date,reload,setReload }) {
+function Dashboard({date}) {
+
+ 
   
   const [reservations, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [tablesError, setTablesError] = useState(null);
   const history = useHistory();
-console.log(reload)
+
   useEffect(loadDashboard, [date]);
   useEffect(loadTables, []);
 
@@ -50,19 +54,19 @@ console.log(reload)
       <div className="row" style={{ maxWidth: "400px" }}>
         <div className="col">
           <button
-            onClick={() =>{setReload(!reload); history.push(`/dashboard?date=${previous(date)}`)}
+            onClick={() =>{history.push(`/dashboard?date=${previous(date)}`)}
               }
           >
             Previous <br /> {previous(date)}
           </button>
         </div>
         <div className="col">
-          <button onClick={() => {setReload(!reload);history.push(`/dashboard?date=${today()}`)}}>
+          <button onClick={() => {history.push(`/dashboard?date=${today()}`)}}>
             Today <br /> {today()}
           </button>
         </div>
         <div className="col">
-          <button onClick={() => {setReload(!reload);history.push(`/dashboard?date=${next(date)}`)}}>
+          <button onClick={() => {history.push(`/dashboard?date=${next(date)}`)}}>
             Next <br /> {next(date)}
           </button>
         </div>
@@ -87,7 +91,7 @@ console.log(reload)
             </tr>
           </thead>
           {!reservationsError && (
-            <ReservationsList reservations={reservations} reload = {reload}setReload={setReload} />
+            <ReservationsList reservations={reservations}  />
           )}
         </table>
       </div>
