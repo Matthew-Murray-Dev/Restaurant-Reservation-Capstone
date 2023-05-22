@@ -13,6 +13,8 @@ router
   .put(controller.updateStatus)
   .all(methodNotAllowed);
 
+ // router.route("/:reservation_id/seat").put(controller.updateSeatReservation).all(methodNotAllowed)
+
 router
   .route("/:reservation_id")
   .get(controller.listReservationById)

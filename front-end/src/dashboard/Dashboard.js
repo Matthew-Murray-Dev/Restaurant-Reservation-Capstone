@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationsList from "../listItems/ReservationsList";
@@ -13,6 +13,7 @@ import TablesList from "../listItems/TablesList";
  * @returns {JSX.Element}
  */
 function Dashboard({ date }) {
+  
   const [reservations, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
@@ -39,10 +40,7 @@ function Dashboard({ date }) {
   }
 
   console.log(reservations);
- 
-  
- 
-  
+
   return (
     <main>
       <h1>Dashboard</h1>
@@ -84,6 +82,7 @@ function Dashboard({ date }) {
               <th scope="col">Status</th>
               <th scope="col">Action</th>
               <th scope="col">Edit Reservation</th>
+              <th scope="col">Cancel Reservation</th>
             </tr>
           </thead>
           {!reservationsError && (
@@ -103,8 +102,7 @@ function Dashboard({ date }) {
               <th scope="col">Update</th>
             </tr>
           </thead>
-
-          <TablesList tables={tables} />
+          {!tablesError && <TablesList tables={tables} />}
         </table>
       </div>
     </main>

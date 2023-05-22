@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 
-function ReservationForm({ api, initialForm, reservation = [] }) {
+function ReservationForm({ api, initialForm, reservation = false }) {
   const [formData, setFormData] = useState({ ...initialForm });
   const [error, setError] = useState(null);
   const history = useHistory();
+
+console.log(initialForm)
 
   const handleChange = ({ target }) => {
     setFormData({
@@ -13,13 +15,15 @@ function ReservationForm({ api, initialForm, reservation = [] }) {
       [target.name]: target.value,
     });
   };
-
+console.log(formData)
   const handleFormSubmit = (event) => {
     event.preventDefault();
+    
     formData.people = parseInt(formData.people);
-    api(formData)
+    const abortController = new AbortController()
+    api(formData,abortController.signal,formData.reservation_id)
       .then(
-        reservation.length
+        reservation
           ? history.go(-1)
           : history.push(`/dashboard?date=${formData.reservation_date}`)
       )
@@ -31,7 +35,7 @@ function ReservationForm({ api, initialForm, reservation = [] }) {
 
   return (
     <div>
-      <h1>{reservation.length ? "Edit" : "New"} Reservation</h1>
+      <h1>{reservation ? "Edit" : "New"} Reservation</h1>
       <ErrorAlert error={error} />
       <form onSubmit={handleFormSubmit}>
         <div style={divStyle}>

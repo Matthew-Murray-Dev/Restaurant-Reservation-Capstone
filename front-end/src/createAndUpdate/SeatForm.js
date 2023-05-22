@@ -4,7 +4,7 @@ import ErrorAlert from "../layout/ErrorAlert";
 
 function SeatForm() {
 
-    
+    return "hi"
 }
 
 export default SeatForm;

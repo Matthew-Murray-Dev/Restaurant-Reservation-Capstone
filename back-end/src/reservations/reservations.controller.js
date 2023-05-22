@@ -61,6 +61,8 @@ function hasData(req, res, next) {
 }
 
 function hasAllRequiredFields(req, res, next) {
+
+  
   const fields = [
     "first_name",
     "last_name",
@@ -204,6 +206,21 @@ function statusUnknown(req, res, next) {
   next({ status: 400, message: "Status to update cannot be unknown" });
 }
 
+//format Date
+
+function formatDate(req,res,next){
+  if (res.locals.reservation.length){res.locals.reservation.forEach((reservation)=>{reservation.reservation_date=reservation.reservation_date.toISOString().slice(0, 10)})} else if (!Array.isArray(res.locals.reservation)) {res.locals.reservation.reservation_date=res.locals.reservation.reservation_date.toISOString().slice(0,10)}
+  
+   
+
+  
+  
+  
+  return next();
+  }
+
+
+
 //Create,List,Update,Delete
 
 async function create(req, res) {
@@ -255,11 +272,13 @@ module.exports = {
   ],
   listReservationById: [
     asyncErrorBoundary(reservationExistsById),
+    formatDate,
     listReservation,
   ],
 
   listReservationByQuery: [
     asyncErrorBoundary(reservationExistsByQuery),
+    formatDate,
     listReservation,
   ],
 
@@ -274,7 +293,7 @@ module.exports = {
     hasEligibleNumberOfPeople,
     asyncErrorBoundary(updateReservation),
   ],
-  updateStatus: [
+   updateStatus: [
     asyncErrorBoundary(reservationExistsById),
     hasData,
     statusFinished,
@@ -286,3 +305,7 @@ module.exports = {
     asyncErrorBoundary(deleteReservation),
   ],*/
 };
+
+
+
+

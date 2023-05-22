@@ -1,16 +1,15 @@
 import React from "react";
 
-import { Redirect, Route, Switch,} from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import Search from "../search/Search";
-import NewReservation from "../createAndUpdate/newReservation/NewReseration";
+import NewReservation from "../createAndUpdate/newReservation/NewReservation";
 import TableForm from "../createAndUpdate/TableForm";
 import SeatForm from "../createAndUpdate/SeatForm";
 import NotFound from "./NotFound";
 import { today } from "../utils/date-time";
 import useQuery from "../utils/useQuery";
-
-
+import EditReservation from "../createAndUpdate/editReservation/EditReservation";
 
 /**
  * Defines all the routes for the application.
@@ -20,13 +19,12 @@ import useQuery from "../utils/useQuery";
  * @returns {JSX.Element}
  */
 
-
-
-
 function Routes() {
   const query = useQuery();
-let date = query.get("date")
-  if (!date){date=today()}
+  let date = query.get("date");
+  if (!date) {
+    date = today();
+  }
   return (
     <Switch>
       <Route exact={true} path="/">
@@ -39,17 +37,26 @@ let date = query.get("date")
         <Dashboard date={date} />
       </Route>
       <Route exact={true} path="/search">
-        <Search/>
+        <Search />
       </Route>
-      <Route exact={true} path="/reservations/new"><NewReservation/></Route>
-      <Route path="/reserations/:reservation_id/seat"><SeatForm/></Route>
-      
-      <Route exact={true} path="/tables/new"><TableForm/></Route>
+      <Route exact={true} path="/reservations/new">
+        <NewReservation />
+      </Route>
+      <Route path="/reservations/:reservation_id/edit">
+        <EditReservation />
+      </Route>
+      <Route path="/reservations/:reservation_id/seat">
+        <SeatForm />
+      </Route>
+
+      <Route exact={true} path="/tables/new">
+        <TableForm />
+      </Route>
       <Route>
         <NotFound />
       </Route>
     </Switch>
   );
 }
-//<Route path="reservations/:reservation_id/edit"><EditReservation/></Route>
+
 export default Routes;

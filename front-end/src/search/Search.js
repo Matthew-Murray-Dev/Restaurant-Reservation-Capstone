@@ -29,7 +29,7 @@ function Search() {
     setFormData({ ...initialFormState });
   };
   return (
-    <main>
+    <div>
       <div className="row" style={{ padding: "5px" }}>
         <form name="search" onSubmit={handleFormSubmit}>
           <input
@@ -49,20 +49,30 @@ function Search() {
       </div>
       <br />
       <ErrorAlert error={reservationsError} />
-<div><ReservationsList reservations={reservations}/></div>
+      {reservations.length>0 && (<table className="table">
+          <thead>
+            <tr>
+              <th scope="col">Reservation ID</th>
+              <th scope="col">First Name</th>
+              <th scope="col">Last Name</th>
+              <th scope="col">Phone #</th>
+              <th scope="col">Reservation Date</th>
+              <th scope="col">Reservation Time</th>
+              <th scope="col">Party Size</th>
+              <th scope="col">Status</th>
+              <th scope="col">Action</th>
+              <th scope="col">Edit Reservation</th>
+              <th scope="col">Cancel Reservation</th>
+            </tr>
+          </thead>
+          
+            <ReservationsList reservations={reservations} />
+          </table>)}
+          </div>
       
-{JSON.stringify(reservations)}
 
-
-
-      
-    </main>
   );
 }
 
-/* {<ErrorAlert error={reservationsError} /> ? (
-        <ErrorAlert error={reservationsError} />
-      ) : (
-        JSON.stringify(reservations)
-      )}*/
+
 export default Search;
