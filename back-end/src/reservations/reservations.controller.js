@@ -9,8 +9,7 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 async function reservationExistsById(req, res, next) {
   const reservation_id = req.params.reservation_id;
   const reservation = await service.listReservationById(reservation_id);
-  console.log(reservation, "*");
-  if (reservation && reservation.length !== 0) {
+    if (reservation && reservation.length !== 0) {
     res.locals.reservation = reservation[0];
 
     return next();
