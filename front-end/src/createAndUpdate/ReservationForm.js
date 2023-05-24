@@ -6,10 +6,8 @@ import { today } from "../utils/date-time";
 function ReservationForm({ api, initialForm, reservation = false }) {
   const [formData, setFormData] = useState({ ...initialForm });
   const [error, setError] = useState(null);
-  const [apiError,setApiError]=useState(null);
+  const [apiError, setApiError] = useState(null);
   const history = useHistory();
-
-  console.log(initialForm);
 
   const handleChange = ({ target }) => {
     setFormData({
@@ -17,8 +15,6 @@ function ReservationForm({ api, initialForm, reservation = false }) {
       [target.name]: target.value,
     });
   };
-
-  console.log(formData);
 
   function formValidation() {
     const formEntryErrors = [];
@@ -35,19 +31,21 @@ function ReservationForm({ api, initialForm, reservation = false }) {
       dateToday.getSeconds();
 
     if (reservationDate.getDay() === 2) {
-      formEntryErrors.push({id:1,
+      formEntryErrors.push({
+        id: 1,
         message:
           "Reservation must not be on a Tuesday when the restaurant is closed",
       });
     }
 
     if (
-      new Date(
-        formData.reservation_date + " " + formData.reservation_time) <
-          new Date(date + " " + timeToday)
-      
+      new Date(formData.reservation_date + " " + formData.reservation_time) <
+      new Date(date + " " + timeToday)
     ) {
-      formEntryErrors.push({ id:2,message: "Reservation must not be in the past" });
+      formEntryErrors.push({
+        id: 2,
+        message: "Reservation must not be in the past",
+      });
     }
 
     if (
@@ -56,12 +54,12 @@ function ReservationForm({ api, initialForm, reservation = false }) {
       new Date(formData.reservation_date + " " + formData.reservation_time) >
         new Date(`${formData.reservation_date} 21:30`)
     ) {
-      formEntryErrors.push({id:3,
+      formEntryErrors.push({
+        id: 3,
         message: "Reservation must be after 10:30 AM and before 9:30 PM",
       });
     }
-    console.log(formEntryErrors)
-    console.log(formData.reservation_date,formData.reservation_time,date,timeToday)
+
     if (formEntryErrors.length) {
       setError(formEntryErrors);
     }
@@ -74,11 +72,16 @@ function ReservationForm({ api, initialForm, reservation = false }) {
     const abortController = new AbortController();
     if (formValidation()) {
       formData.people = parseInt(formData.people);
-      if (formData.mobile_number.length===10){let formatMobileNumber=formData.mobile_number.slice(0,3)+"-"+formData.mobile_number.slice(3,6)+"-"+formData.mobile_number.slice(6)
-      formData.mobile_number=formatMobileNumber}
+      if (formData.mobile_number.length === 10) {
+        let formatMobileNumber =
+          formData.mobile_number.slice(0, 3) +
+          "-" +
+          formData.mobile_number.slice(3, 6) +
+          "-" +
+          formData.mobile_number.slice(6);
+        formData.mobile_number = formatMobileNumber;
+      }
 
-      
-      
       api(formData, abortController.signal, formData.reservation_id)
         .then(() =>
           reservation
@@ -87,7 +90,7 @@ function ReservationForm({ api, initialForm, reservation = false }) {
         )
         .catch(setApiError);
     }
-   return ()=>abortController.abort();
+    return () => abortController.abort();
   };
 
   const labelStyle = { marginBottom: "4px" };
@@ -96,10 +99,14 @@ function ReservationForm({ api, initialForm, reservation = false }) {
   return (
     <div>
       <h1>{reservation ? "Edit" : "New"} Reservation</h1>
-      <ErrorAlert error={apiError}/>
-      {error&&(<div id="alert-Div" className="alert alert-danger">
-                {error.map((e)=>{return <div key={e.id}>{e.message}</div>})}
-            </div>)}
+      <ErrorAlert error={apiError} />
+      {error && (
+        <div id="alert-Div" className="alert alert-danger">
+          {error.map((e) => {
+            return <div key={e.id}>{e.message}</div>;
+          })}
+        </div>
+      )}
       <form onSubmit={handleFormSubmit}>
         <div style={divStyle}>
           <label style={labelStyle} htmlFor="first_name">

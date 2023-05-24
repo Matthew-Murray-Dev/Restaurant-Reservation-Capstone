@@ -9,7 +9,7 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 async function reservationExistsById(req, res, next) {
   const reservation_id = req.params.reservation_id;
   const reservation = await service.listReservationById(reservation_id);
-    if (reservation && reservation.length !== 0) {
+  if (reservation && reservation.length !== 0) {
     res.locals.reservation = reservation[0];
 
     return next();
@@ -248,7 +248,7 @@ async function updateReservation(req, res, next) {
   const reReadData = await service.listReservationById(
     res.locals.reservation.reservation_id
   );
-  
+
   res.json({ data: reReadData[0] });
 }
 

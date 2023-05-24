@@ -6,7 +6,7 @@ import ErrorAlert from "../../layout/ErrorAlert";
 function SeatTableList({ tables, reservation }) {
   const [thisTable, setThisTable] = useState(tables[0].table_id);
   const [error, setError] = useState(null);
-  const [apiError,setApiError]=useState(null);
+  const [apiError, setApiError] = useState(null);
   const history = useHistory();
 
   const handleTableChange = ({ target }) => {
@@ -20,12 +20,15 @@ function SeatTableList({ tables, reservation }) {
     );
 
     if (!tableSelect) {
-      formErrors.push({ id:1,message: "Selected table does not exist." });
+      formErrors.push({ id: 1, message: "Selected table does not exist." });
     } else if (!reservation) {
-      formErrors.push({ id:2,message: "Reservation does not exist." });
+      formErrors.push({ id: 2, message: "Reservation does not exist." });
     } else {
       if (tableSelect.reservation_id) {
-        formErrors.push({ id:3,message: "Selected table is currently occupied." });
+        formErrors.push({
+          id: 3,
+          message: "Selected table is currently occupied.",
+        });
       }
 
       if (tableSelect.capacity < reservation.people) {
@@ -38,37 +41,37 @@ function SeatTableList({ tables, reservation }) {
     if (formErrors.length) {
       setError(formErrors);
     }
-console.log(formErrors)
+    
     return !formErrors.length;
   }
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const abortController = new AbortController();
-    
+
     if (formValidation()) {
-      
       updateTable(
         { reservation_id: reservation.reservation_id },
         abortController.signal,
         thisTable
-      ).then(() => history.push(`/dashboard`)).catch(setApiError);
+      )
+        .then(() => history.push(`/dashboard`))
+        .catch(setApiError);
     }
-   return ()=>abortController.abort();
+    return () => abortController.abort();
   };
 
-  console.log(reservation);
-  console.log(error)
-console.log(error&&(<div style={{ display: "none" }} id="alert-Div" className="alert alert-danger">
-{error.map((e)=>{return <div key={e.id}>{e.message}</div>})}
-</div>))
   return (
     <div>
-        <ErrorAlert error={apiError}/>
-      {error&&(<div id="alert-Div" className="alert alert-danger">
-                {error.map((e)=>{return <div key={e.id}>{e.message}</div>})}
-            </div>)}
-            
+      <ErrorAlert error={apiError} />
+      {error && (
+        <div id="alert-Div" className="alert alert-danger">
+          {error.map((e) => {
+            return <div key={e.id}>{e.message}</div>;
+          })}
+        </div>
+      )}
+
       <form name="create" onSubmit={handleSubmit}>
         <select
           id="table_id"
@@ -83,7 +86,9 @@ console.log(error&&(<div style={{ display: "none" }} id="alert-Div" className="a
             </option>
           ))}
         </select>
-        <button type="button" onClick={()=>history.go(-1)}>Cancel</button>
+        <button type="button" onClick={() => history.go(-1)}>
+          Cancel
+        </button>
         <button type="submit">Submit</button>
       </form>
     </div>
