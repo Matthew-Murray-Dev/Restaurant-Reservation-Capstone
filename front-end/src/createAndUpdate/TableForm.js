@@ -65,7 +65,7 @@ function TableForm() {
           />
         </div>
         <div className="row p-3 ">
-          <button onClick={() => history.go(-1)}>Cancel</button>
+          <button type="button" onClick={() => history.go(-1)}>Cancel</button>
           <div className="col col-2">
             <button type="submit">Submit</button>
           </div>

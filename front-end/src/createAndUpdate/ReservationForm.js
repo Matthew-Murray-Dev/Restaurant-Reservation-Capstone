@@ -81,12 +81,12 @@ function ReservationForm({ api, initialForm, reservation = false }) {
           formData.mobile_number.slice(6);
         formData.mobile_number = formatMobileNumber;
       }
+//reservation ? history.go(-1) :
+
 
       api(formData, abortController.signal, formData.reservation_id)
         .then(() =>
-          reservation
-            ? history.go(-1)
-            : history.push(`/dashboard?date=${formData.reservation_date}`)
+           history.push(`/dashboard?date=${formData.reservation_date}`)
         )
         .catch(setApiError);
     }
@@ -202,7 +202,7 @@ function ReservationForm({ api, initialForm, reservation = false }) {
         </div>
 
         <div className="row p-3 ">
-          <button type="button" onClick={() => history.go(-1)}>
+          <button type="button" onClick={() => reservation ? history.go(-1) :history.push('/dashboard')}>
             Cancel
           </button>
           <div className="col col-2">
