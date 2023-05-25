@@ -22,11 +22,11 @@ function Dashboard({date}) {
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [tablesError, setTablesError] = useState(null);
-  const [isLoading,setIsLoading]=useState(false)
+  
   const history = useHistory();
 
   useEffect(loadDashboard, [date]);
-  useEffect(loadTables, [date]);
+  useEffect(loadTables, []);
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -44,7 +44,7 @@ function Dashboard({date}) {
     return () => abortController.abort();
   }
 
-  const buttonProps = isLoading ? { disabled: true} : {};
+  let buttonProps = {};
 
   return (
     <main>
@@ -55,26 +55,28 @@ function Dashboard({date}) {
       <div className="row" style={{ maxWidth: "400px" }}>
         <div className="col">
           <button {...buttonProps}
-            onClick={() =>{setIsLoading(true);
-              console.log("clicked");
+            onClick={() =>{console.log(buttonProps,"1")
+              buttonProps={disabled:true};
+console.log(buttonProps,"2")
               history.push(`/dashboard?date=${previous(date)}`);
-            setIsLoading(false)}
+              console.log(buttonProps,"3")
+            buttonProps={}
+            console.log(buttonProps,"4")
+          }
               }
           >
             Previous <br /> {previous(date)}
           </button>
         </div>
         <div className="col">
-          <button onClick={() => {setIsLoading(true);
-              console.log("clicked");
-              history.push(`/dashboard?date=${today()}`);setIsLoading(false);}}>
+          <button onClick={() => {
+              history.push(`/dashboard?date=${today()}`);}}>
             Today <br /> {today()}
           </button>
         </div>
         <div className="col">
-          <button onClick={() => {setIsLoading(true);
-              console.log("clicked");
-              history.push(`/dashboard?date=${next(date)}`);setIsLoading(false);}}>
+          <button onClick={() => {
+              history.push(`/dashboard?date=${next(date)}`);}}>
             Next <br /> {next(date)}
           </button>
         </div>
