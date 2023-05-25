@@ -55,7 +55,7 @@ function loadTables() {
         </table>
       </div>
       <ErrorAlert error={tablesError} />
-      {(tables&&reservation)&&<SeatTableList tables={tables} reservation={reservation}/>}
+      {(tables&&reservation)&&<SeatTableList key={reservation.reservation_id} tables={tables} reservation={reservation}/>}
     </div>
   );
 }
