@@ -49,7 +49,8 @@
   "author": "Thinkful, Inc.",
   "license": "UNLICENSED",
   "dependencies": {
-    "minimatch": "^9.0.1",
-    "mismatch": "^1.2.0"
+    
+    "minimatch": "^9.0.1"
+   
   }
 }
