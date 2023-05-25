@@ -22,6 +22,7 @@ function Dashboard({date}) {
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [tablesError, setTablesError] = useState(null);
+  const [isLoading,setIsLoading]=useState(false)
   const history = useHistory();
 
   useEffect(loadDashboard, [date]);
@@ -43,7 +44,7 @@ function Dashboard({date}) {
     return () => abortController.abort();
   }
 
- 
+  const buttonProps = isLoading ? { disabled: true} : {};
 
   return (
     <main>
@@ -53,20 +54,27 @@ function Dashboard({date}) {
       </div>
       <div className="row" style={{ maxWidth: "400px" }}>
         <div className="col">
-          <button
-            onClick={() =>{history.push(`/dashboard?date=${previous(date)}`)}
+          <button {...buttonProps}
+            onClick={() =>{setIsLoading(true);
+              console.log("clicked");
+              history.push(`/dashboard?date=${previous(date)}`);
+            setIsLoading(false)}
               }
           >
             Previous <br /> {previous(date)}
           </button>
         </div>
         <div className="col">
-          <button onClick={() => {history.push(`/dashboard?date=${today()}`)}}>
+          <button onClick={() => {setIsLoading(true);
+              console.log("clicked");
+              history.push(`/dashboard?date=${today()}`);setIsLoading(false);}}>
             Today <br /> {today()}
           </button>
         </div>
         <div className="col">
-          <button onClick={() => {history.push(`/dashboard?date=${next(date)}`)}}>
+          <button onClick={() => {setIsLoading(true);
+              console.log("clicked");
+              history.push(`/dashboard?date=${next(date)}`);setIsLoading(false);}}>
             Next <br /> {next(date)}
           </button>
         </div>
