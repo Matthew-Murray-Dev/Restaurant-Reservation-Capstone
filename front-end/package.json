@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Thinkful-Ed/starter-restaurant-reservation",
+    "url": "https://github.com/Matthew-Murray-Dev/Restaurant-Reservation-Capstone",
     "directory": "/front-end"
   },
   "private": true,
