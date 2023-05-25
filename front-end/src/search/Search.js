@@ -10,6 +10,7 @@ function Search() {
   
 
   const [reservations, setReservations] = useState([]);
+  const [update,setUpdate]=useState(false)
   const [reservationsError, setReservationsError] = useState(null);
 
   const handleChange = ({ target }) => {
@@ -24,7 +25,7 @@ function Search() {
     event.preventDefault();
     setReservationsError(null);
     listReservations({mobile_number:formData.mobile_number})
-      .then(setReservations)
+      .then(setReservations).then(setUpdate(false)).then(setUpdate(true))
       .catch(setReservationsError);
     setFormData({ ...initialFormState });
   };
@@ -42,13 +43,14 @@ function Search() {
             onChange={handleChange}
             required={true}
           />
-          <button style={{ marginLeft: "5px" }} onSubmit={handleFormSubmit}>
+          <button type="submit" style={{ marginLeft: "5px" }} >
             Find
           </button>
         </form>
       </div>
       <br />
       <ErrorAlert error={reservationsError} />
+      {(update&&!reservations.length)&&<div>No reservations found</div>}
       {reservations.length>0 && (<table className="table">
           <thead>
             <tr>

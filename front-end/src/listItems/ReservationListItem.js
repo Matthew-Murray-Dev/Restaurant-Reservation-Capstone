@@ -21,12 +21,18 @@ function ReservationListItem({ reservation }) {
 
   const reDirect = () => {
     const abortController = new AbortController();
+    console.log(updateReservation(
+      { status: "cancelled" },
+      abortController.signal,
+      reservation_id,
+      "/status"
+    ))
     updateReservation(
       { status: "cancelled" },
       abortController.signal,
       reservation_id,
       "/status"
-    ).then(history.go(0));
+    ).then(()=>history.go(0));
   };
   const windowConfirm = () => {
     if (
@@ -46,26 +52,20 @@ function ReservationListItem({ reservation }) {
       <td>{reservation_date}</td>
       <td>{reservation_time}</td>
       <td>{people}</td>
-      <td>{status}</td>
+      <td data-reservation-id-status={reservation.reservation_id}>{status}</td>
       <td>
         {status === "booked" && (
           <a href={`/reservations/${reservation_id}/seat`}>Seat</a>
         )}
       </td>
       <td>
-        <button
-          onClick={() => {
-            history.push(`/reservations/${reservation_id}/edit`);
-          }}
-        >
-          Edit
-        </button>
+      <a href={`/reservations/${reservation_id}/edit`}>Edit</a>
       </td>
       <td>
-        <button onClick={handleUpdate}>Cancel</button>
+        <button data-reservation-id-cancel={reservation.reservation_id} onClick={handleUpdate}>Cancel</button>
       </td>
     </tr>
   );
 }
-
+//`/reservations/${reservation_id}/edit`
 export default ReservationListItem;

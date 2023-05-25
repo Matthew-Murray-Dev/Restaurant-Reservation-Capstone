@@ -25,7 +25,7 @@ function Dashboard({date}) {
   const history = useHistory();
 
   useEffect(loadDashboard, [date]);
-  useEffect(loadTables, []);
+  useEffect(loadTables, [date]);
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -43,7 +43,7 @@ function Dashboard({date}) {
     return () => abortController.abort();
   }
 
-  console.log(reservations);
+ 
 
   return (
     <main>

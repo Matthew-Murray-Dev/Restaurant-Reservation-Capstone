@@ -4,6 +4,14 @@ import { deleteTableAssignment } from "../utils/api";
 
 function TableListItem({ table }) {
   const history = useHistory();
+  
+  const reDirect = () => {
+    const abortController = new AbortController();
+    deleteTableAssignment(table.table_id, abortController.signal).then(() =>
+      history.go(0)
+    );
+  };
+
 
   const windowConfirm = () => {
     if (
@@ -15,13 +23,7 @@ function TableListItem({ table }) {
     }
   };
 
-  const reDirect = () => {
-    
-    const abortController = new AbortController();
-    deleteTableAssignment(table.table_id, abortController.signal).then(
-      history.go(0)
-    );
-  };
+ 
 
   return (
     <tr key={table.table_id}>
@@ -29,7 +31,7 @@ function TableListItem({ table }) {
       <td>{table.table_name}</td>
       <td>{table.capacity}</td>
       <td data-table-id-status={table.table_id}>
-        {table.reservation_id ? "Occupied" : "Free"}
+        {table.reservation_id ? "occupied" : "free"}
       </td>
       <td>
         {table.reservation_id && (

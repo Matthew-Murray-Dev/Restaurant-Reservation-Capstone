@@ -139,7 +139,7 @@ export async function deleteTableAssignment(tableId, signal) {
     method: "DELETE",
     signal,
   };
-  console.log(url)
+  
   return await fetchJson(url,options);
 }
 

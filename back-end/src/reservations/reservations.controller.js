@@ -34,12 +34,11 @@ async function reservationExistsByQuery(req, res, next) {
       date = todaysDate;
     }
     const reservationByDate = await service.listReservationByDate(date);
-    if (reservationByDate && reservationByDate.length !== 0) {
+    
       res.locals.reservation = reservationByDate;
 
       return next();
-    }
-    return next({ status: 404, message: "No reservations found" });
+   
   } else {
     const reservationByMobile_Number =
       await service.listReservationByMobileNumber(mobile_number);

@@ -164,7 +164,7 @@ async function deleteTableSeating(req, res, next) {
       res.locals.table.table_id,
       res.locals.table.reservation_id
     )
-    .then(() => res.sendStatus(200))
+    .then(() => res.json({}))
     .catch(next);
 }
 
