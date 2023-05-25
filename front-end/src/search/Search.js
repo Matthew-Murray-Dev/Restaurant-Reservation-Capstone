@@ -23,11 +23,13 @@ function Search() {
   console.log(formData);
   const handleFormSubmit = (event) => {
     event.preventDefault();
+    const abortController = new AbortController();
     setReservationsError(null);
     listReservations({mobile_number:formData.mobile_number})
       .then(setReservations).then(setUpdate(false)).then(setUpdate(true))
       .catch(setReservationsError);
     setFormData({ ...initialFormState });
+    return () => abortController.abort();
   };
   return (
     <div>

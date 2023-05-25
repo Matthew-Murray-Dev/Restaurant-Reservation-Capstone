@@ -21,19 +21,13 @@ function ReservationListItem({ reservation }) {
 
   const reDirect = () => {
     const abortController = new AbortController();
-    console.log(updateReservation(
-      { status: "cancelled" },
-      abortController.signal,
-      reservation_id,
-      "/status"
-    ))
-    updateReservation(
+        updateReservation(
       { status: "cancelled" },
       abortController.signal,
       reservation_id,
       "/status"
     ).then(()=>history.go(0));
-  };
+      };
   const windowConfirm = () => {
     if (
       window.confirm(
