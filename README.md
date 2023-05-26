@@ -23,11 +23,11 @@ Search
 
 ![search display](./readMeImages/Search.JPG "Search")
 
->It contains create and edit functionality for New reservations 
+It contains create and edit functionality for New reservations 
 
 ![create reservation](./readMeImages/NewReservation.JPG "NewReservation")
 
->as well as create functionality for New tables
+Create functionality for New tables
 
 ![create table](./readMeImages/NewTable.JPG "NewTable")
 
