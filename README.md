@@ -15,13 +15,13 @@ Back-end deployment: https://restaurant-reservation-application.onrender.com
 > At this point, the customers will not access the system online.
 >This application contains functionality to display reservations by date, and by mobile number, and to display tables.  
 Dashboard
-![display functionality](/readMeImages\Dashboard.JPG "Dashboard")
+![display functionality](./readMeImages\Dashboard.JPG "Dashboard")
 Search
-![search display](readMeImages\Search.JPG "Search")
+![search display](./readMeImages\Search.JPG "Search")
 >It contains create and edit functionality for New reservations 
-![create reservation](readMeImages\NewReservation.JPG "NewReservation")
+![create reservation](./readMeImages\NewReservation.JPG "NewReservation")
 >as well as create functionality for New tables
-![create table](readMeImages\NewTable.JPG "NewTable")
+![create table](./readMeImages\NewTable.JPG "NewTable")
 
 ## Existing files
 
