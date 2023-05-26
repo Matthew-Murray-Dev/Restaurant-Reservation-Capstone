@@ -10,8 +10,8 @@ Back-end deployment: https://restaurant-reservation-application.onrender.com
 
 # Capstone: Restaurant Reservation System
 
-> You have been hired as a full stack developer at _Periodic Tables_, a startup that is creating a reservation system for fine dining restaurants.
-> The software is used only by restaurant personnel when a customer calls to request a reservation.
+> I was hired as a full stack developer at _Periodic Tables_, a startup that is creating a reservation system for fine dining restaurants.
+> This software is used only by restaurant personnel when a customer calls to request a reservation.
 > At this point, the customers will not access the system online.
 >This application contains functionality to display reservations by date, and by mobile number, and to display tables.  
 
@@ -30,6 +30,53 @@ Search
 >as well as create functionality for New tables
 
 ![create table](./readMeImages/NewTable.JPG "NewTable")
+
+>Additional functionality includes the ability to cancel reservations, seat booked reservations, and finish seated reservations and clear seated tables.
+
+## Api Documentation
+
+The {url}/reservations provides a get request returning data in the form of:
+
+ `{
+    "data": [
+        {
+            "reservation_id": 1,
+            "first_name": "firstName",
+            "last_name": "lastName",
+            "mobile_number": "123-456-7890",
+            "reservation_date": "2021-01-01",
+            "reservation_time": "20:00:00",
+            "people": 1,
+            "created_at": "2021-01-01T08:30:32.326Z",
+            "updated_at": "2021-01-01T08:30:32.326Z",
+            "status": "booked"
+        }
+    ]
+}`
+
+The {url}/tables provides a get request returning data in the form of:
+
+ `{
+    "data": [
+        {
+            "table_id": 3,
+            "table_name": "#1",
+            "capacity": 6,
+            "reservation_id": null,
+            "created_at": "2023-05-25T16:42:46.212Z",
+            "updated_at": "2023-05-25T16:42:46.212Z"
+        },
+    ]
+ }`
+
+## Technologies used
+
+>JavaScript
+>React
+>SQL
+>Knex
+>HTML
+>CSS
 
 ## Existing files
 
