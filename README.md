@@ -1,6 +1,7 @@
 # Capstone: Restaurant Reservation System
 
 # Link to Live Documentation
+
 front-end static server: https://restaurant-reservation-production-t80e.onrender.com
 
 
@@ -12,8 +13,15 @@ Back-end deployment: https://restaurant-reservation-application.onrender.com
 > You have been hired as a full stack developer at _Periodic Tables_, a startup that is creating a reservation system for fine dining restaurants.
 > The software is used only by restaurant personnel when a customer calls to request a reservation.
 > At this point, the customers will not access the system online.
->This
-
+>This application contains functionality to display reservations by date, and by mobile number, and to display tables.  
+Dashboard
+![display functionality](/readMeImages\Dashboard.JPG "Dashboard")
+Search
+![search display](readMeImages\Search.JPG "Search")
+>It contains create and edit functionality for New reservations 
+![create reservation](readMeImages\NewReservation.JPG "NewReservation")
+>as well as create functionality for New tables
+![create table](readMeImages\NewTable.JPG "NewTable")
 
 ## Existing files
 
