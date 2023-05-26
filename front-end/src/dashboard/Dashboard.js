@@ -55,13 +55,13 @@ function Dashboard({date}) {
       <div className="row" style={{ maxWidth: "400px" }}>
         <div className="col">
           <button {...buttonProps}
-            onClick={() =>{console.log(buttonProps,"1")
+            onClick={() =>{//console.log(buttonProps,"1")
               buttonProps={disabled:true};
-console.log(buttonProps,"2")
+//console.log(buttonProps,"2")
               history.push(`/dashboard?date=${previous(date)}`);
-              console.log(buttonProps,"3")
+              //console.log(buttonProps,"3")
             buttonProps={}
-            console.log(buttonProps,"4")
+            //console.log(buttonProps,"4")
           }
               }
           >

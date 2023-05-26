@@ -20,7 +20,7 @@ function Search() {
     });
   };
 
-  console.log(formData);
+  //console.log(formData);
   const handleFormSubmit = (event) => {
     event.preventDefault();
     const abortController = new AbortController();

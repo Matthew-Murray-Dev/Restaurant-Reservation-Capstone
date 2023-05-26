@@ -32,7 +32,7 @@ function SeatTableList({ tables, reservation }) {
       }
 
       if (tableSelect.capacity < reservation.people) {
-        formErrors.push({
+        formErrors.push({id:4,
           message: `Selected table has insufficient capacity for ${reservation.people} people.`,
         });
       }
@@ -61,13 +61,14 @@ function SeatTableList({ tables, reservation }) {
     return () => abortController.abort();
   };
 
+
   return (
     <div>
-      <ErrorAlert error={apiError} />
+      
       {error && (
         <div id="alert-Div" className="alert alert-danger">
           {error.map((e) => {
-            return <div key={e.id}>{e.message}</div>;
+            return <ErrorAlert key={e.id} error={e.message}/>
           })}
         </div>
       )}

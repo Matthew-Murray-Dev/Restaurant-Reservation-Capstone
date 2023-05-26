@@ -21,7 +21,7 @@ const {reservation_id} = useParams();
       .catch(setReservationError);
     return () => abortController.abort();
   }
-console.log(reservation)
+//console.log(reservation)
   return (<div>
     <ErrorAlert error={reservationError} />
     {(!reservationError&&reservation) && <ReservationForm
